@@ -5,31 +5,31 @@ import os
 
 
 def find(hunted_item, search_black_list, price_range):
+    print(search_black_list)
     black_list = set(search_black_list)
     url = format_url(hunted_item)
     response = requests.get(url)
+    was_in_blacklist = False
     found_links = []
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        was = False
-        title = soup.title
 
         paragraphs = soup.findAll('div', class_='css-1sw7q4x')
 
         for paragraph in paragraphs:
-            was = False
             for word in paragraph.text:
-                if word in black_list:
-                    was = True
-                    break
-            if not was:
+                if word.lower() in black_list:
+                    print("było")
+                    was_in_blacklist = True
+            if not was_in_blacklist:
                 price = paragraph.find(class_="css-10b0gli er34gjf0")
                 if price is not None:
                     price = re.sub(r'\D', '', str(price.text))
                     if price_range[0] <= int(price) <= price_range[1]:
                         link = (paragraph.find('a'))
                         found_links.append("https://www.olx.pl/" + link.get('href'))
+
     return found_links
 
 
