@@ -4,17 +4,6 @@ import re
 import os
 
 
-def format_url(hunted_item):
-    words = hunted_item.split()
-    url = "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/q-"
-    for x in words:
-        url += x + "-"
-
-    url = url[:-1]
-    url += "/?search%5Border%5D=filter_float_price%3Aasc"
-    return url
-
-
 def find(hunted_item, search_black_list, price_range):
     black_list = set(search_black_list)
     url = format_url(hunted_item)
@@ -25,7 +14,6 @@ def find(hunted_item, search_black_list, price_range):
         soup = BeautifulSoup(response.text, 'html.parser')
         was = False
         title = soup.title
-        print()
 
         paragraphs = soup.findAll('div', class_='css-1sw7q4x')
 
@@ -43,4 +31,21 @@ def find(hunted_item, search_black_list, price_range):
                         link = (paragraph.find('a'))
                         found_links.append("https://www.olx.pl/" + link.get('href'))
     return found_links
+
+
+def format_url(hunted_item):
+    words = hunted_item.split()
+    url = "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/q-"
+    for x in words:
+        url += x + "-"
+
+    url = url[:-1]
+    url += "/?search%5Border%5D=filter_float_price%3Aasc"
+    return url
+
+
+
+
+
+
 
