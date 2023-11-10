@@ -2,6 +2,7 @@ import tkinter as tk
 import Functions as Fn
 import webbrowser
 
+
 def validate_input(p):
     if p == "" or p.isdigit():
         return True
@@ -10,6 +11,7 @@ def validate_input(p):
 
 
 def generate_window():
+
     def start_hunt():
 
         if input3.get() and input4.get() and input1.get() is not None:
@@ -20,19 +22,20 @@ def generate_window():
             links_list.delete(0, tk.END)
             if len(found_links) == 0:
                 links_list.insert(tk.END, "Nothing was hunted")
-            for link in found_links:
-                links_list.insert(tk.END, link)
+            for link, price in found_links.items():
+                links_list.insert(tk.END, f"{price} zł => {link}")
 
     def open_link(event):
         selected_index = links_list.nearest(event.y)
         selected_link = links_list.get(selected_index)
-        webbrowser.open(selected_link)
+        price, link = selected_link.split(" => ")
+        webbrowser.open(link)
 
     default_min = 0
     default_max = 9999
     root = tk.Tk()
     root.title("Hunter")
-    root.geometry("700x300")
+    root.geometry("800x300")
     root['padx'] = 10
     validate = root.register(validate_input)
 
@@ -57,7 +60,7 @@ def generate_window():
     input4.insert(0, str(default_max))
     button = tk.Button(text="Hunt", command=start_hunt)
 
-    links_list = tk.Listbox(root, height=15, width=80)
+    links_list = tk.Listbox(root, height=15, width=100)
 
     links_list.bind("<Button-1>", open_link)
 
@@ -82,7 +85,7 @@ def generate_window():
     button.grid(row=12, column=0)
 
     spacers4.grid(row=0, column=1)
-    links_list.grid(row=0, column=2, rowspan=12)
+    links_list.grid(row=0, column=2, rowspan=12, sticky="nsew")
 
     root.mainloop()
 
