@@ -24,6 +24,7 @@ def find(hunted_item, search_black_list, price_range):
                 price = paragraph.find(class_="css-10b0gli er34gjf0")
                 if price is not None:
                     price = re.sub(r'\D', '', str(price.text))
+                    print(int(price))
                     if price_range[0] <= int(price) <= price_range[1]:
                         link = (paragraph.find('a'))
                         found_links["https://www.olx.pl/" + link.get('href')] = price
@@ -33,7 +34,7 @@ def find(hunted_item, search_black_list, price_range):
 
 def format_url(hunted_item):
     words = hunted_item.split()
-    url = "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/q-"
+    url = "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-"
     for x in words:
         url += x + "-"
 
