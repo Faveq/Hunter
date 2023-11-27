@@ -1,6 +1,7 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Radiobutton, ttk, StringVar
-
+from tkinter.ttk import Combobox
+from Controller import run_search
 def validate_input(p):
     if p == "" or p.isdigit():
         return True
@@ -15,7 +16,6 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\batek\OneDrive\Pulpit\gui\build\asse
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
-
 
 window = Tk()
 
@@ -38,12 +38,12 @@ canvas = Canvas(
 canvas.place(x = 0, y = 0)
 
 var = StringVar()
-radio_1 = Radiobutton(text='Olx', variable=var, value='olx', font=("RobotoRoman Light", 12))
+radio_1 = Radiobutton(text='Olx', variable=var, value='olx', font=("RobotoRoman Light", 12), background="white")
 radio_1.place(
     x=35,
     y=68
 )
-radio_2 = Radiobutton(text='Allegro', variable=var, value='allegro', font=("RobotoRoman Light", 12))
+radio_2 = Radiobutton(text='Allegro lokalnie', variable=var, value='allegro', font=("RobotoRoman Light", 12), background="white")
 radio_2.place(
     x=95,
     y=68
@@ -71,7 +71,8 @@ item_to_hunt_entry = Entry(
     bd=0,
     bg="#DBDBDB",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=("RobotoRoman Light", 12 * -1)
 )
 item_to_hunt_entry.place(
     x=43.0,
@@ -91,7 +92,8 @@ blacklist_entry = Text(
     bd=0,
     bg="#DBDBDB",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=("RobotoRoman Light", 12 * -1)
 )
 blacklist_entry.place(
     x=40.0,
@@ -150,6 +152,17 @@ canvas.create_text(
     fill="#000000",
     font=("RobotoRoman Light", 14 * -1)
 )
+options = ["Domyślnie", "Cena malejąco", "Cena rosnąco", "Najnowsze"]
+
+sort_combobox = Combobox(
+    width=13,
+    values = options
+)
+sort_combobox.place(
+    x = 219.0,
+    y = 355.0,
+)
+sort_combobox.current(0)
 
 entry_image_3 = PhotoImage(
     file=relative_to_assets("entry_3.png"))
@@ -164,7 +177,8 @@ min_price_entry = Entry(
     fg="#000716",
     highlightthickness=0,
     validate="key",
-    validatecommand=(validate, "%P")
+    validatecommand=(validate, "%P"),
+    font=("RobotoRoman Light", 12 * -1)
 )
 min_price_entry.place(
     x=77.0,
@@ -198,7 +212,8 @@ max_price_entry = Entry(
     fg="#000716",
     highlightthickness=0,
     validate="key",
-    validatecommand=(validate, "%P")
+    validatecommand=(validate, "%P"),
+    font=("RobotoRoman Light", 12 * -1)
 )
 
 max_price_entry.place(
@@ -211,14 +226,14 @@ max_price_entry.insert(0,9999)
 
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
-button_1 = Button(
+hunt_button = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
+    command=lambda: run_search(var.get(), item_to_hunt_entry.get(), blacklist_entry.get("1.0", "end-1c"), min_price_entry.get(), max_price_entry.get(), sort_combobox.current()),
     relief="flat"
 )
-button_1.place(
+hunt_button.place(
     x=116.0,
     y=485.0,
     width=124.0,
